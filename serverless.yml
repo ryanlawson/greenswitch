@@ -1,0 +1,44 @@
+org: ryanlawson2
+app: my-application
+service: my-application-service
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-east-1
+  stage: prod
+
+  deploymentBucket:
+    name: my-deployment-bucket
+
+  memorySize: 1024
+  timeout: 900
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ec2:DescribeInstances
+        - ec2:StartInstances
+        - ec2:StopInstances
+      Resource:
+        - '*'
+
+functions:
+  GreenSwitch:
+    handler: greenswitch.handler
+    events:
+      - schedule:
+         rate: cron(0 20 ? * 2-6 *)
+         enabled: true
+         input:
+           InstanceNames: MyInstance1,MyInstance2
+           Action: ON
+      - schedule:
+         rate: cron(0 0 ? * 3-7 *)
+         enabled: true
+         input:
+           InstanceNames: MyInstance1,MyInstance2
+           Action: OFF
