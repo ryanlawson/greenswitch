@@ -53,6 +53,7 @@ def handler(event, context):
     print(f'Action: {action}')
     if action not in ['ON', 'OFF']:
         print('Action must be ON or OFF.')
+        return
     turn_on = action == 'ON'
     instances = get_instances(instance_list, turn_on)
     if len(instances) <= 0:
