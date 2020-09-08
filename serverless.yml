@@ -23,8 +23,7 @@ provider:
         - ec2:DescribeInstances
         - ec2:StartInstances
         - ec2:StopInstances
-      Resource:
-        - '*'
+      Resource: '*'
 
 functions:
   GreenSwitch:

@@ -1,14 +1,19 @@
 from datetime import datetime
 import boto3
+import json
 import os
 
 client = boto3.client('ec2')
 
 def get_instances(instance_list, turn_on):
     response = client.describe_instances(Filters=[{'Name': 'tag:Name', 'Values': instance_list}])
-    instances = response['Reservations'][0]['Instances']
+    instances = []
+    for r in response['Reservations']:
+        for i in r['Instances']:
+            instances.append(i)
     ids = []
     for i in instances:
+        print(str(i))
         instance_id = i['InstanceId']
         instance_is_running = i['State']['Name'] == 'running'
         if turn_on:
